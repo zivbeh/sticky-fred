@@ -3,9 +3,9 @@ var c = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 800;
 c.fillStyle = 'red';
-var x = 100;  /// hello eden
+var x = 100;
 var y = 100;
-var dx = 0; //fdfsd fd
+var dx = 0;
 var dy = 0;
 var size = 30;
 var run = false;
@@ -45,7 +45,7 @@ gameMap = [
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,
     0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,1,1,0,0,0,0,0,0,0, 
     0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
     0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
@@ -61,6 +61,11 @@ function map() {
     let gy = 0;
     collition = [];
     for (let i = 1; i < gameMap.length + 1; i++) {
+        // if (gameMap[i - 1] == 2){
+        //     c.fillStyle = 'green';
+        //     c.fillRect(gx * 67,gy * 67, 67, 67)
+        //     collition.push({x: gx * 67 + 33.5, y: gy * 67 + 33.5});
+        // }
         if (gameMap[i - 1] == 1){
             c.fillStyle = 'green';
             c.fillRect(gx * 67,gy * 67, 67, 67)
@@ -114,6 +119,7 @@ function animate() {
     if (run)
         requestAnimationFrame(animate)
     c.clearRect(0, 0, canvas.width, canvas.height)
+    console.log(collide)
     dy -= 0.2;
     if (dir == 'l')
         dx += 0.4;
@@ -125,25 +131,33 @@ function animate() {
         dx -= 0.4;
     if (dx < 0.4 && dx > -0.4)
         dx = 0;
-    if (collide == 'l' && dir == 'r' && !a)
+    if (collide == 'l' && dir == 'r')
         collide = null;
-    else if (collide == 'r' && dir == 'l' && !a)
+    else if (collide == 'r' && dir == 'l')
         collide = null;
-    else if ((collide == 'd' || collide == 'u') && dy != -0.2 && !a)
+    else if ((collide == 'd' || collide == 'u') && dy != -0.2)
         collide = null;
+    else if (!a) {
+        collide = null;
+    }
     a = false;
     for (let i = 0; i < collition.length; i++) {
         const xy = collition[i];
         let disX = xy.x - x - size / 2;
         let disY = xy.y - y - size / 2;
-        if(Math.abs(disY) < m && Math.abs(xy.x - x - size / 2) < m) {
+        if(Math.abs(disY) < m && Math.abs(disX) < m) {
             if (disY > 0 && disY > Math.abs(disX)) {
                 while (Math.abs(disY) < m) {
                     y -= 0.2
                     disY = xy.y - y - size / 2;
                 }
                 dy = 0;
-                collide = 'd';
+                if (collide == 'l' || collide == 'dl')
+                    collide = 'dl'
+                else if (collide == 'r'|| collide == 'dr')
+                    collide = 'dr';
+                else 
+                    collide = 'd';
             } else if (disY < 0 && -disY > Math.abs(disX)) {
                 while (Math.abs(disY) < m) {
                     y += 0.2
@@ -165,22 +179,37 @@ function animate() {
                 }
                 dx = 0;
                 collide = 'l';
+            } else if (disY > 0 && disY > Math.abs(disX)) {
+                while (Math.abs(disX) < m) {
+                    x += 0.2
+                    disX = xy.x - x - size / 2;
+                }
+                dx = 0;
+                collide = 'l';
             }
-            a = true;
         }
+        if(Math.abs(disY) < m + 1 && Math.abs(disX) < m + 1)
+            a = true;
     }
-    console.log(collide)
     if (jump == true) {
-        if (collide == 'd')
+        if (collide == 'd') {
             dy = 8;
-        else if (collide == 'r') {
+            collide = null;
+        } else if (collide == 'r') {
             dy = 8;
             dx = 8;
+            collide = null;
         } else if (collide == 'l') {
             dy = 8;
             dx = -8;
+            collide = null;
+        } else if (collide == 'dl') {
+            dy = 8;
+            collide = 'l';
+        } else if (collide == 'dr') {
+            dy = 8;
+            collide = 'r';
         }
-        collide = null;
         jump = false;
     }
     if (dy < -maxSpeed)
