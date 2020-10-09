@@ -14,7 +14,7 @@ var jump;
 var maxSpeed = 15;
 var collide;
 function player() {
-    c.fillStyle = 'red';
+    c.fillStyle = 'orange';
     c.fillRect(x, y, size, size)
 }
 function reset() {
@@ -40,18 +40,18 @@ function reset() {
     }
 }
 gameMap = [
+    0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,
+    0,1,1,1,0,0,1,1,0,0,0,0,0,1,1,
+    0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,
     0,0,0,0,0,0,1,1,0,0,0,0,0,0,0, 
     0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
     0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,
-    0,0,1,1,0,1,0,0,0,0,0,1,0,0,0,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-    1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+    0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,
+    0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,
+    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+    2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
 ]
 map();
 player();
@@ -61,11 +61,18 @@ function map() {
     let gy = 0;
     collition = [];
     for (let i = 1; i < gameMap.length + 1; i++) {
-        // if (gameMap[i - 1] == 2){
-        //     c.fillStyle = 'green';
-        //     c.fillRect(gx * 67,gy * 67, 67, 67)
-        //     collition.push({x: gx * 67 + 33.5, y: gy * 67 + 33.5});
-        // }
+        if (gameMap[i - 1] == 3){
+            c.fillStyle = 'yellow';
+            //c.arc(gx * 67, gx * 67, 67/2, 0, 2 * Math.PI);
+            //c.arc(x,y,r,sAngle,eAngle,counterclockwise);
+            c.fillRect(gx * 67,gy * 67, 67, 67)
+            collition.push({x: gx * 67 + 33.5, y: gy * 67 + 33.5});
+        }
+        if (gameMap[i - 1] == 2){
+            c.fillStyle = 'red';
+            c.fillRect(gx * 67,gy * 67, 67, 67)
+            collition.push({x: gx * 67 + 33.5, y: gy * 67 + 33.5});
+        }
         if (gameMap[i - 1] == 1){
             c.fillStyle = 'green';
             c.fillRect(gx * 67,gy * 67, 67, 67)
@@ -131,16 +138,19 @@ function animate() {
         dx -= 0.4;
     if (dx < 0.4 && dx > -0.4)
         dx = 0;
-    if (collide == 'l' && dir == 'r')
+    if (collide == 'l' && dir == 'r'){
+        maxSpeed = 15;// changed here
         collide = null;
-    else if (collide == 'r' && dir == 'l')
+    } else if (collide == 'r' && dir == 'l'){
+        maxSpeed = 15;// changed here
         collide = null;
-    else if ((collide == 'd' || collide == 'u') && dy != -0.2)
+    } else if ((collide == 'd' || collide == 'u') && dy != -0.2)
         collide = null;
     else if (!a) {
         collide = null;
     }
     a = false;
+    console.log(x,y)
     for (let i = 0; i < collition.length; i++) {
         const xy = collition[i];
         let disX = xy.x - x - size / 2;
@@ -152,11 +162,13 @@ function animate() {
                     disY = xy.y - y - size / 2;
                 }
                 dy = 0;
-                if (collide == 'l' || collide == 'dl')
-                    collide = 'dl'
-                else if (collide == 'r'|| collide == 'dr')
+                if (collide == 'l' || collide == 'dl'){
+                    maxSpeed = 10;  // changed here
+                    collide = 'dl';
+                }else if (collide == 'r'|| collide == 'dr'){
+                    maxSpeed = 10;// changed heres
                     collide = 'dr';
-                else 
+                }else 
                     collide = 'd';
             } else if (disY < 0 && -disY > Math.abs(disX)) {
                 while (Math.abs(disY) < m) {
@@ -191,27 +203,39 @@ function animate() {
         if(Math.abs(disY) < m + 1 && Math.abs(disX) < m + 1)
             a = true;
     }
+
+    if (y >= 638 && y <= 641) {
+        console.log('should die----------reddddd-------------------')
+        reset();
+    }
+
     if (jump == true) {
         if (collide == 'd') {
+            maxSpeed = 15;// changed here
             dy = 8;
             collide = null;
         } else if (collide == 'r') {
+            maxSpeed = 15;// changed here
             dy = 8;
             dx = 8;
             collide = null;
         } else if (collide == 'l') {
+            maxSpeed = 15;// changed here
             dy = 8;
             dx = -8;
             collide = null;
         } else if (collide == 'dl') {
+            maxSpeed = 10;// changed here
             dy = 8;
             collide = 'l';
         } else if (collide == 'dr') {
+            maxSpeed = 10;// changed here
             dy = 8;
             collide = 'r';
         }
         jump = false;
     }
+    console.log(maxSpeed)// changed here
     if (dy < -maxSpeed)
         dy = -maxSpeed;
     if (dx > maxSpeed)
