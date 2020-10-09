@@ -1,0 +1,60 @@
+html {
+    min-width: 1100px;
+}
+body {
+    background-color: rgb(159, 206, 228);
+    color:rgb(24, 45, 99);
+    font-size: 40px;
+    font-family: 'Nunito', sans-serif;
+    text-align: center;
+}
+.header {
+    text-align: center;
+    margin: -8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: rgb(63, 152, 194);
+    color: rgb(18, 71, 150);
+    font-size: 80px;
+}
+canvas {
+    margin-top: 50px;
+    border-radius: 20px;
+    border: solid 10px rgb(119, 154, 219);
+    background-color: rgb(213, 236, 255);
+}
+footer {
+    text-align: left;
+    padding: 10px 30px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+button {
+    font-family: 'Nunito', sans-serif;
+    background-color: rgb(66, 177, 177);
+    border-radius: 5px;
+    border: none;
+    color: white;
+}
+button:hover {
+    background-color: rgb(40, 158, 212);
+    box-shadow:  rgb(79, 176, 221) 2px 2px 20px;
+    transition: 0.5s;
+}
+button:focus {
+    outline: 0;
+}
+button:active {
+    background-color: rgb(113, 219, 219);
+    transition: none;
+}
+.reset {
+    position: absolute;
+    margin: 10px;
+    height: 75px;
+    padding: 0px 15px;
+    font-size: 40px;
+    width: 140px;
+    right: 10px;
+}
