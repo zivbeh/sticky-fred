@@ -3,14 +3,9 @@ var c = canvas.getContext('2d');
 canvas.width = 1000;
 canvas.height = 800;
 c.fillStyle = 'red';
-var x = 100;  /// hello eden
-<<<<<<< HEAD
-var y = 100; //gggg
-var dx = 0;
-=======
+var x = 100;
 var y = 100;
-var dx = 0; //fdfsd
->>>>>>> refs/remotes/origin/master
+var dx = 0;
 var dy = 0;
 var size = 30;
 var run = false;
