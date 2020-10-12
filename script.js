@@ -16,7 +16,7 @@ var collide;
 var mapX = 0;
 var mapY = 0;
 var coins = 0;
-
+var Reset = document.getElementById('reset');
 var textcoins = document.getElementById('Coins');
 textcoins.textContent = coins;
 function player() {
@@ -24,38 +24,39 @@ function player() {
     c.fillRect(x, y, size, size)
 }
 function reset() {
-    var reset = document.getElementById('reset');
-    const text = reset.textContent;
+    var over = document.getElementById('Over');
+    over.style.display = 'none';
+    canvas.style.transition = '0.2s';
+    canvas.style.backgroundColor = 'rgb(213, 236, 255)';
+    run = false;
+    x = 500;
+    y = 100;
+    dx = 0;
+    dy = 0;
+    size = 30;
+    dir = null;
+    jump = false;
+    l = false;
+    r = false;
+    mapX = 0;
+    mapY = 0;
+    c.clearRect(0, 0, canvas.width, canvas.height)
+    resetMap();
+    map();
+    player();
+    coins = 0;
+    textcoins.textContent = coins;
+    Reset.textContent = 'Play!';
+}
+function click1() {
+    const text = Reset.textContent;
     if (text === 'Play!'){
         jump = false;
         run = true;
         animate();
-        reset.textContent = 'Reset';
-    } else {
-        var over = document.getElementById('Over');
-        over.style.display = 'none';
-        canvas.style.transition = '0.1s';
-        canvas.style.backgroundColor = 'rgb(213, 236, 255)';
-        run = false;
-        x = 500;
-        y = 100;
-        dx = 0;
-        dy = 0;
-        size = 30;
-        dir = null;
-        jump = false;
-        l = false;
-        r = false;
-        mapX = 0;
-        mapY = 0;
-        c.clearRect(0, 0, canvas.width, canvas.height)
-        resetMap();
-        map();
-        player();
-        coins = 0;
-        textcoins.textContent = coins;
-        reset.textContent = 'Play!';
-    }
+        Reset.textContent = 'Reset';
+    } else
+        reset();
 }
 function resetMap(){
     gameMap = [
@@ -65,8 +66,8 @@ function resetMap(){
         0,1,1,1,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,1,1,0,0,3,0,0,0,0,
         0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,3,1,0,0,0,0,0,0,
         0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,
-        0,0,0,0,0,0,0,1,0,0,4,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,
-        0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,1,3,0,0,0,1,0,0,0,0,0,
+        0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,
+        0,0,0,0,0,0,0,1,0,0,4,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,1,3,0,0,0,1,0,0,0,0,0,
         0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,3,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,0,
         0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
@@ -239,9 +240,10 @@ function animate() {
         if(Math.abs(disY) < m + 1 && Math.abs(disX) < m + 1)
             a = true;
     }
-    if (mapY < -150)
+    if (mapY < -150 && mapY > -165) {
         GameOver();
-
+        run = true;
+    }
     if (jump == true) {
         if (collide == 'd') {
             dy = 8;
@@ -282,6 +284,7 @@ function animate() {
     
 }
 function GameOver() {
+    run = false;
     var over = document.getElementById('Over');
     var body = $('body');
     const width = body.width();
@@ -290,9 +293,12 @@ function GameOver() {
     canvas.style.transition = '2s';
     over.style.display = 'block';
     setTimeout(function() {
-        canvas.style.transition = '0.1s';
-        canvas.style.backgroundColor = 'rgb(213, 236, 255)';
-        reset();
-    }, 2000);
-    // c.clearRect(0, 0, canvas.width, canvas.height)
+        console.log('2')
+        c.clearRect(0, 0, canvas.width, canvas.height)
+        player();
+    }, 1);
+    
+    setTimeout(function() {
+        run = false;
+    }, 1000);
 }
