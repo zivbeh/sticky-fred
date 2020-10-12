@@ -11,7 +11,7 @@ var size = 30;
 var run = false;
 var dir;
 var jump;
-var maxSpeed = 12;
+var maxSpeed = 15;
 var collide;
 var mapX = 0;
 var mapY = 0;
@@ -36,7 +36,6 @@ function reset() {
         over.style.display = 'none';
         canvas.style.transition = '0.1s';
         canvas.style.backgroundColor = 'rgb(213, 236, 255)';
-        resetMap();
         run = false;
         x = 500;
         y = 100;
@@ -49,6 +48,10 @@ function reset() {
         r = false;
         mapX = 0;
         mapY = 0;
+        c.clearRect(0, 0, canvas.width, canvas.height)
+        resetMap();
+        map();
+        player();
         coins = 0;
         textcoins.textContent = coins;
         reset.textContent = 'Play!';
@@ -57,15 +60,15 @@ function reset() {
 function resetMap(){
     gameMap = [
         0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,
-        0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,1,0,0,0,3,0,0,0,0,
+        0,4,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,
+        0,0,0,0,0,0,4,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,1,0,0,0,3,0,0,0,0,
         0,1,1,1,0,0,1,1,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,1,1,0,0,3,0,0,0,0,
         0,1,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,3,1,0,0,0,0,0,0,
         0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,
-        0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,3,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,
-        0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,1,3,0,0,0,1,0,0,0,0,0,
-        0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,0,
-        0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,0,0,
+        0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0,0,1,3,0,0,0,1,0,0,0,0,0,
+        0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,3,0,0,0,0,0,0,1,1,1,1,0,0,0,0,1,0,0,0,
+        0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,
         0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
     ]
@@ -78,28 +81,33 @@ function map() {
     let gx = 0;
     let gy = 0;
     collition = [];
-    collition2 = [];
     for (let i = 1; i < gameMap.length + 1; i++) {
         if (gameMap[i - 1] == 3){
             c.fillStyle = 'yellow';
-            //c.arc(gx * 67, gx * 67, 67/2, 0, 2 * Math.PI);
-            //c.arc(x,y,r,sAngle,eAngle,counterclockwise);
             c.beginPath();
             c.arc(gx * 67 + mapX+ 33.5, gy * 67+ 33.5 + mapY, 20/2, 0, 2 * Math.PI);
             c.fill();
             c.stroke();
-            //c.fillRect(gx * 67 + mapX ,gy * 67, 68, 68)
-            collition2.push({x: gx * 67 + 33.5 + mapX , y: gy * 67 + 33.5 + mapY});
+            
+            collition.push({place: i - 1, x: gx * 67 + 33.5 + mapX , y: gy * 67 + 33.5 + mapY});
+        }
+        if (gameMap[i - 1] == 4){ // כאן המכשול!
+            c.fillStyle = 'red';
+            var imgObj = new Image();
+            var imgPath = 'PNG/s1.jpeg';
+            imgObj.src = imgPath;
+            c.drawImage(imgObj, gx * 67 + mapX, gy * 67 + mapY);
+            collition.push({place: i - 1, x: gx * 67 + 33.5 + mapX, y: gy * 67 + 33.5 + mapY});
         }
         if (gameMap[i - 1] == 2){
             c.fillStyle = 'red';
-            c.fillRect(gx * 67 + mapX,gy * 67 + mapY, 68, 68)
-            collition.push({x: gx * 67 + 33.5 + mapX, y: gy * 67 + 33.5 + mapY});
+            c.fillRect(gx * 67 + mapX, gy * 67 + mapY, 68, 68)
+            collition.push({place: i - 1, x: gx * 67 + 33.5 + mapX, y: gy * 67 + 33.5 + mapY});
         }
         if (gameMap[i - 1] == 1){
             c.fillStyle = 'green';
             c.fillRect(gx * 67 + mapX, gy * 67 + mapY, 68, 68)
-            collition.push({x: gx * 67 + 33.5 + mapX, y: gy * 67 + 33.5 + mapY});
+            collition.push({place: i - 1, x: gx * 67 + 33.5 + mapX, y: gy * 67 + 33.5 + mapY});
         }
         if (i % (gameMap.length / 12) == 0 && i != 0) {
             gx = 0;
@@ -144,7 +152,6 @@ document.addEventListener('keyup', function(event) {
     }
 });
 let a;
-let m;
 function animate() {
     c.clearRect(0, 0, canvas.width, canvas.height)
     if (run)
@@ -161,10 +168,8 @@ function animate() {
     if (dx < 0.4 && dx > -0.4)
         dx = 0;
     if (collide == 'l' && dir == 'r'){
-        maxSpeed = 15;// changed here
         collide = null;
     } else if (collide == 'r' && dir == 'l'){
-        maxSpeed = 15;// changed here
         collide = null;
     } else if ((collide == 'd' || collide == 'u') && dy != -0.2)
         collide = null;
@@ -172,47 +177,34 @@ function animate() {
         collide = null;
     }
     a = false;
-    //console.log(x,y)
-    for (let i = 0; i < collition2.length; i++) {
-        m = 10 + size / 2;
-        const xy = collition2[i];
-        let disX = xy.x - x - size / 2;
-        let disY = xy.y - y - size / 2;
-        if(Math.abs(disY) < m && Math.abs(disX) < m) {
-            console.log('coin')
-            let a = -1;
-            for (let z = 0; z < gameMap.length; z++){
-                if (gameMap[z] == 3) {
-                    a+=1;
-                }
-                if (a == i) {
-                    gameMap[z] = 0;
-                    break;
-                }
-            }
-            coins +=1;
-            textcoins.textContent = coins;
-        }
-    }
     for (let i = 0; i < collition.length; i++) {
-        m = 33.5 + size / 2;
+        let m = 33.5 + size / 2;
+        let m2 = 10 + size / 2;
         const xy = collition[i];
         let disX = xy.x - x - size / 2;
         let disY = xy.y - y - size / 2;
-        if(Math.abs(disY) < m && Math.abs(disX) < m) {
+        if(Math.abs(disY) < m && Math.abs(disX) < m && gameMap[xy.place] == 4) {
+            GameOver();
+            run = false;
+        }
+        if(Math.abs(disY) < m2 && Math.abs(disX) < m2 && gameMap[xy.place] == 3) {
+            gameMap[xy.place] = 0;
+            collition.pop(xy.place);
+            coins += 1;
+            textcoins.textContent = coins;
+        }
+        if(Math.abs(disY) < m && Math.abs(disX) < m && gameMap[xy.place] == 1) {
             if (disY > 0 && disY > Math.abs(disX)) {
                 while (Math.abs(disY) < m) {
                     y -= 0.2
                     disY = xy.y - y - size / 2;
                 }
                 dy = 0;
-                if (collide == 'l' || collide == 'dl'){
-                    //maxSpeed = 10;  // changed here
+                if (collide == 'l' || collide == 'dl')
                     collide = 'dl';
-                }else if (collide == 'r'|| collide == 'dr'){
-                    //maxSpeed = 10;// changed heres
+                else if (collide == 'r'|| collide == 'dr')
                     collide = 'dr';
-                }else 
+                else 
                     collide = 'd';
             } else if (disY < 0 && -disY > Math.abs(disX)) {
                 while (Math.abs(disY) < m) {
@@ -247,49 +239,30 @@ function animate() {
         if(Math.abs(disY) < m + 1 && Math.abs(disX) < m + 1)
             a = true;
     }
-    if (mapY < -150) {
-        var over = document.getElementById('Over');
-        var body = $('body');
-        const width = body.width();
-        over.style.marginLeft = `${width / 2 - 202}px`;
-        canvas.style.backgroundColor = 'black';
-        canvas.style.transition = '2s';
-        over.style.display = 'block';
-        if (mapY < -4200) {
-            canvas.style.transition = '0.1s';
-            canvas.style.backgroundColor = 'rgb(213, 236, 255)';
-            reset();
-        }
-    }
-    console.log(mapY)
+    if (mapY < -150)
+        GameOver();
 
     if (jump == true) {
         if (collide == 'd') {
-            //maxSpeed = 15;// changed here
             dy = 8;
             collide = null;
         } else if (collide == 'r') {
-            //maxSpeed = 15;// changed here
             dy = 8;
             dx = 8;
             collide = null;
         } else if (collide == 'l') {
-            //maxSpeed = 15;// changed here
             dy = 8;
             dx = -8;
             collide = null;
         } else if (collide == 'dl') {
-            //maxSpeed = 10;// changed here
             dy = 8;
             collide = 'l';
         } else if (collide == 'dr') {
-            //maxSpeed = 10;// changed here
             dy = 8;
             collide = 'r';
         }
         jump = false;
     }
-    //console.log(maxSpeed)// changed here
     if (dy < -maxSpeed)
         dy = -maxSpeed;
     if (dx > maxSpeed)
@@ -298,8 +271,6 @@ function animate() {
         dx = -maxSpeed;
     map();
     player();
-    
-    //console.log(mapX)
     if ((x < 400 && dx > 0) || (x > 600 && dx < 0))
         mapX += dx;
     else
@@ -308,4 +279,20 @@ function animate() {
         mapY += dy;
     else
         y -= dy;
+    
+}
+function GameOver() {
+    var over = document.getElementById('Over');
+    var body = $('body');
+    const width = body.width();
+    over.style.marginLeft = `${width / 2 - 202}px`;
+    canvas.style.backgroundColor = 'black';
+    canvas.style.transition = '2s';
+    over.style.display = 'block';
+    setTimeout(function() {
+        canvas.style.transition = '0.1s';
+        canvas.style.backgroundColor = 'rgb(213, 236, 255)';
+        reset();
+    }, 2000);
+    // c.clearRect(0, 0, canvas.width, canvas.height)
 }
